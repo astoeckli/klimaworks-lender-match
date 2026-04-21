@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lender Match — Greenpeak Capital</title>
+<style>
+:root{color-scheme:light}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;min-height:100vh;padding:20px 14px 40px;color:#0f172a}
+.wrap{max-width:500px;margin:0 auto}
+.hdr{text-align:center;margin-bottom:20px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #e2e8f0;border-radius:999px;padding:4px 13px;font-size:11px;color:#475569;font-weight:500;margin-bottom:11px}
+.dot{width:7px;height:7px;border-radius:50%;background:#16a34a}
+.hdr h1{font-size:22px;font-weight:800;color:#0f172a}
+.hdr p{color:#64748b;font-size:12.5px;margin-top:5px;line-height:1.5}
+.card{background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px 22px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.steps{display:flex;align-items:center;margin-bottom:24px}
+.si{display:flex;align-items:center;gap:5px;flex:1}
+.si:last-child{flex:none}
+.snum{width:25px;height:25px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex-shrink:0}
+.snum.active{background:#15803d;color:#fff}.snum.done{background:#16a34a;color:#fff}.snum.pend{background:#f1f5f9;color:#94a3b8}
+.slbl{font-size:11px;font-weight:500}
+.slbl.active{color:#15803d}.slbl.done{color:#16a34a}.slbl.pend{color:#94a3b8}
+.sdiv{flex:1;height:1px;background:#e2e8f0;margin:0 6px}
+.fg{margin-bottom:15px}
+.fg label{display:block;font-size:11.5px;font-weight:600;color:#374151;margin-bottom:5px;letter-spacing:.01em}
+.fg select,.fg input,.fg textarea{width:100%;border:1.5px solid #e2e8f0;border-radius:9px;padding:9px 11px;font-size:12.5px;color:#0f172a;background:#fff;outline:none;transition:border-color .15s;font-family:inherit;appearance:none;-webkit-appearance:none}
+.fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.fg select:focus,.fg input:focus,.fg textarea:focus{border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.fg textarea{resize:none}
+.hint{font-size:10.5px;color:#94a3b8;margin-top:3px}
+.tg{display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.tsw{width:38px;height:21px;border-radius:999px;flex-shrink:0;position:relative;cursor:pointer;transition:background .2s;margin-top:2px;border:none;outline:none}
+.tsw.off{background:#e2e8f0}.tsw.on{background:#16a34a}
+.tk{position:absolute;top:2.5px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .18s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tsw.off .tk{left:2.5px}.tsw.on .tk{left:19.5px}
+.tlbl{font-size:12px;font-weight:500;color:#374151}
+.tdsc{font-size:11px;color:#94a3b8;margin-top:1px}
+.btn{padding:11px 18px;border-radius:11px;font-size:12.5px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:inherit}
+.btnp{background:#15803d;color:#fff;width:100%}
+.btnp:hover:not(:disabled){background:#166534}
+.btnp:disabled{background:#f1f5f9;color:#94a3b8;cursor:not-allowed}
+.btns{background:#fff;border:1.5px solid #e2e8f0;color:#475569;padding:10px 15px}
+.btns:hover{background:#f8fafc}
+.btnrow{display:flex;gap:8px;margin-top:18px}
+.btnrow .btnp{flex:1}
+.stitle{font-size:17px;font-weight:700;color:#0f172a;margin-bottom:3px}
+.ssub{font-size:12px;color:#64748b;margin-bottom:18px;line-height:1.5}
+.ldc{text-align:center;padding:20px 0}
+.spin{width:42px;height:42px;border-radius:50%;border:3px solid #dcfce7;border-top-color:#16a34a;animation:spin .65s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.pbar{background:#f1f5f9;border-radius:999px;height:5px;margin:14px 0 7px;overflow:hidden}
+.pfill{height:5px;border-radius:999px;background:#16a34a;transition:width .4s ease}
+.plbl{font-size:11px;color:#16a34a;font-weight:500}
+.rhdr{text-align:center;margin-bottom:14px}
+.rtitle{font-size:17px;font-weight:700}
+.rsub{font-size:11.5px;color:#64748b;margin-top:3px}
+.dpill{display:flex;flex-wrap:wrap;gap:5px;background:#f8fafc;border-radius:9px;padding:9px 11px;margin-bottom:14px;font-size:11px;color:#475569}
+.dpill strong{font-weight:600;color:#0f172a}
+.dsep{color:#cbd5e1}
+.lc{border:1.5px solid #e2e8f0;border-radius:13px;padding:13px 15px;margin-bottom:9px;background:#fff}
+.lc.top{border-color:#86efac;background:#f0fdf4}
+.lhdr{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:9px}
+.lrank{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex-shrink:0}
+.lrank.tr{background:#15803d;color:#fff}.lrank.or{background:#f1f5f9;color:#64748b}
+.lnw{flex:1}
+.lname{font-size:13.5px;font-weight:700;color:#0f172a}
+.ltype{font-size:11px;color:#64748b;margin-top:1px}
+.tbadge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:999px;border:1px solid;flex-shrink:0;white-space:nowrap}
+.t1{background:#dcfce7;color:#15803d;border-color:#86efac}
+.t2{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe}
+.ts{background:#fffbeb;color:#b45309;border-color:#fde68a}
+.tr2{background:#f8fafc;color:#64748b;border-color:#e2e8f0}
+.mbr{display:flex;justify-content:space-between;margin-bottom:4px;font-size:11px}
+.mbl{color:#94a3b8}.mbv{font-weight:700;color:#0f172a}
+.mbwrap{background:#f1f5f9;border-radius:999px;height:5px;overflow:visible;position:relative;margin-bottom:3px}
+.mbfill{height:5px;border-radius:999px;background:#16a34a;position:relative;z-index:1}
+.mbprop{position:absolute;top:0;height:5px;border-radius:0 999px 999px 0;background:repeating-linear-gradient(45deg,#e2e8f0 0,#e2e8f0 2px,#f8fafc 2px,#f8fafc 7px)}
+.propnote{font-size:10px;color:#94a3b8}
+.lstats{display:flex;gap:14px;margin-top:9px;font-size:11px;flex-wrap:wrap}
+.sv{color:#374151;font-weight:600}.sl{color:#94a3b8}
+.ok{color:#16a34a;font-weight:600}.na{color:#94a3b8}
+.exbtn{font-size:11px;color:#15803d;cursor:pointer;margin-top:7px;background:none;border:none;font-family:inherit;font-weight:500;padding:0}
+.exbtn:hover{text-decoration:underline}
+.ldesc{font-size:11px;color:#475569;line-height:1.55;border-top:1px solid #e2e8f0;margin-top:7px;padding-top:7px}
+.pbox{background:#f8fafc;border:1px solid #e2e8f0;border-radius:11px;padding:11px 13px;margin:12px 0}
+.pbt{font-size:11px;font-weight:700;color:#0f172a;margin-bottom:3px}
+.pbb{font-size:11px;color:#475569;line-height:1.5}
+.ctabox{background:#15803d;border-radius:13px;padding:16px 18px;text-align:center;margin-top:12px}
+.ctat{font-size:14.5px;font-weight:700;color:#fff;margin-bottom:4px}
+.ctab{font-size:11px;color:#bbf7d0;margin-bottom:12px;line-height:1.5}
+.ctabtn{display:inline-block;background:#fff;color:#166534;font-weight:700;font-size:12px;padding:9px 22px;border-radius:9px;text-decoration:none}
+.ctabtn:hover{background:#f0fdf4}
+.rstbtn{width:100%;text-align:center;margin-top:9px;font-size:11px;color:#94a3b8;cursor:pointer;background:none;border:none;font-family:inherit}
+.rstbtn:hover{color:#475569}
+.errmsg{background:#fef2f2;border:1px solid #fecaca;border-radius:9px;padding:10px 12px;font-size:11.5px;color:#991b1b;margin-bottom:12px}
+.footer{text-align:center;font-size:10.5px;color:#94a3b8;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hdr">
+    <div class="badge"><span class="dot"></span>Powered by Greenpeak Debt Intelligence</div>
+    <h1>Lender Match</h1>
+    <p>Submit your project. Get a ranked shortlist<br>from 1,042 active lenders — in seconds.</p>
+  </div>
+  <div class="card" id="card"></div>
+  <p class="footer">Greenpeak Capital Partners FZCO &middot; Dubai IFZA &middot; 1,042 lenders &middot; 2,973 deal comps</p>
+</div>
+
+<script>
+// ── LIVE CONFIG ─────────────────────────────────────────────────────────────
+const EDGE_FN_URL    = "https://vawdnaqxowecwvqckjmr.supabase.co/functions/v1/match-lenders";
+const SUPABASE_KEY   = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhd2RuYXF4b3dlY3d2cWNram1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY2MTM4NzIsImV4cCI6MjA5MjE4OTg3Mn0.Gg8CxirpLq9DnqrablCwRGpC6NstM00l1b-59ILFZy4";
+const BOOKING_EMAIL  = "alain.stoeckli@klimaworks.com";
+
+// ── FORM OPTIONS ────────────────────────────────────────────────────────────
+const SECTORS=[{v:"logistics",l:"Logistics / Industrial / Warehouse"},{v:"hotel",l:"Hotel / Hospitality"},{v:"office",l:"Office / Commercial"},{v:"solar",l:"Solar / Photovoltaic"},{v:"bess",l:"BESS / Battery Storage"},{v:"wind",l:"Wind (Onshore / Offshore)"},{v:"residential",l:"Residential / PBSA / BTR"},{v:"senior_living",l:"Senior Living / Healthcare"},{v:"mixed_use",l:"Mixed Use / Retail"}];
+const GEOS=[{v:"denmark",l:"Denmark"},{v:"nordics",l:"Nordics (SE, NO, FI)"},{v:"dach",l:"DACH (Germany, Austria, Switzerland)"},{v:"uk",l:"UK / Ireland"},{v:"benelux",l:"Benelux"},{v:"france",l:"France"},{v:"southern_europe",l:"Southern Europe (ES, IT, PT)"},{v:"cee",l:"CEE (PL, CZ, HU, RO)"},{v:"pan_european",l:"Pan-European / Multiple"},{v:"mena",l:"MENA"},{v:"asia",l:"Southeast Asia / Philippines"}];
+const PRODUCTS=[{v:"senior",l:"Senior Secured / Project Finance"},{v:"mezz",l:"Mezzanine / Junior Debt"},{v:"whole_loan",l:"Whole Loan (Senior + Mezz)"},{v:"construction",l:"Construction / Development Finance"},{v:"bridge",l:"Bridge Finance"},{v:"green",l:"Green / Sustainability-Linked Loan"}];
+const STAGES=[{v:"stabilised",l:"Stabilised / Refinancing"},{v:"construction",l:"Under Construction"},{v:"development",l:"Development / Pre-construction"},{v:"bridge",l:"Bridge / Short-term"},{v:"portfolio",l:"Portfolio / Platform"}];
+
+// ── STATE ───────────────────────────────────────────────────────────────────
+let ST={step:1,results:null,totalScanned:0,expanded:{},errMsg:"",
+  f:{proj:"",sector:"",geo:"",stage:"",product:"",ticket:"",ltv:"",cr:false,esg:false,name:"",company:"",email:"",desc:""}};
+let _progInt=null;
+
+function upd(k,v){ST.f[k]=v;render();}
+function toggleExpand(id){ST.expanded[id]=!ST.expanded[id];render();}
+
+// ── TIER HELPERS ────────────────────────────────────────────────────────────
+function tierCls(label){
+  if(label==="Tier 1")return"t1";if(label==="Tier 2")return"t2";
+  if(label==="Selective")return"ts";return"tr2";
+}
+
+// ── HTML HELPERS ─────────────────────────────────────────────────────────────
+function sel(lbl,opts,val,key,ph){
+  return`<div class="fg"><label>${lbl}</label><select onchange="upd('${key}',this.value)"><option value="">${ph}</option>${opts.map(o=>`<option value="${o.v}"${val===o.v?" selected":""}>${o.l}</option>`).join("")}</select></div>`;
+}
+function inp(lbl,key,val,type,ph,hint){
+  return`<div class="fg"><label>${lbl}</label><input type="${type||"text"}" value="${val||""}" placeholder="${ph||""}" oninput="upd('${key}',this.value)">${hint?`<div class="hint">${hint}</div>`:""}</div>`;
+}
+function tog(key,val,lbl,desc){
+  return`<div class="tg"><button class="tsw ${val?"on":"off"}" onclick="upd('${key}',${!val})"><div class="tk"></div></button><div><div class="tlbl">${lbl}</div><div class="tdsc">${desc}</div></div></div>`;
+}
+function sbar(c){
+  const s=n=>n<c?"done":n===c?"active":"pend";
+  return`<div class="steps">${[1,2,3].map(n=>`<div class="si"><div class="snum ${s(n)}">${n<c?"✓":n}</div><span class="slbl ${s(n)}">${["","Project","Financing","Contact"][n]}</span></div>${n<3?'<div class="sdiv"></div>':""}`).join("")}</div>`;
+}
+
+// ── STEP RENDERERS ────────────────────────────────────────────────────────────
+function step1(){
+  const f=ST.f,ok=f.sector&&f.geo&&f.stage;
+  return`${sbar(1)}<div class="stitle">Project Overview</div><div class="ssub">Tell us about the asset. We'll match against 1,042 lenders in real time.</div>
+  ${inp("Project Name (optional)","proj",f.proj,"text","e.g. Project Moat")}
+  ${sel("Asset Sector *",SECTORS,f.sector,"sector","Select sector…")}
+  ${sel("Project Geography *",GEOS,f.geo,"geo","Select country / region…")}
+  ${sel("Project Stage *",STAGES,f.stage,"stage","Select stage…")}
+  <button class="btn btnp"${ok?"":" disabled"} onclick="ST.step=2;render()">Continue to Financing Requirements →</button>`;
+}
+function step2(){
+  const f=ST.f,ok=f.product&&f.ticket>0&&f.ltv>0;
+  return`${sbar(2)}<div class="stitle">Financing Requirements</div><div class="ssub">Define the debt structure. Our scoring model evaluates each lender's appetite.</div>
+  ${sel("Debt Product Required *",PRODUCTS,f.product,"product","Select product…")}
+  ${inp("Debt Ticket Size (€M) *","ticket",f.ticket,"number","e.g. 27","Enter in EUR millions. For DKK deals, divide by 7.46")}
+  ${inp("Target LTV / LTC (%) *","ltv",f.ltv,"number","e.g. 65")}
+  ${tog("cr",f.cr,"Construction / Development Risk","Does this deal involve construction or development risk?")}
+  ${tog("esg",f.esg,"ESG / Green Finance Preferred","Would a green or sustainability-linked structure be considered?")}
+  <div class="btnrow"><button class="btn btns" onclick="ST.step=1;render()">← Back</button><button class="btn btnp"${ok?"":" disabled"} onclick="ST.step=3;render()">Continue to Contact →</button></div>`;
+}
+function step3(){
+  const f=ST.f,ok=f.email&&f.company;
+  return`${sbar(3)}<div class="stitle">Almost there</div><div class="ssub">Your personalised shortlist will be sent to this address.</div>
+  ${inp("Your Name","name",f.name,"text","e.g. Lars Christiansen")}
+  ${inp("Company / Fund *","company",f.company,"text","e.g. Nordic Property Ventures")}
+  ${inp("Email Address *","email",f.email,"email","you@company.com")}
+  <div class="fg"><label>Brief Project Description (optional)</label><textarea rows="3" placeholder="Asset size, business plan, timeline…" oninput="upd('desc',this.value)">${f.desc||""}</textarea></div>
+  <div class="hint" style="margin-bottom:12px">By submitting, you consent to Greenpeak Capital Partners using your details to deliver the lender match report.</div>
+  ${ST.errMsg?`<div class="errmsg">⚠ ${ST.errMsg}</div>`:""}
+  <div class="btnrow"><button class="btn btns" onclick="ST.step=2;render()">← Back</button><button class="btn btnp"${ok?"":" disabled"} onclick="doMatch()">Match My Project →</button></div>`;
+}
+function loading(){
+  return`<div class="ldc"><div class="spin"></div><div class="stitle">Matching your project</div><div class="ssub" style="margin-top:5px">Scanning 1,042 lenders across 10 scoring dimensions</div><div class="pbar"><div class="pfill" id="pfill" style="width:0%"></div></div><div class="plbl" id="plbl">Scanning lender database…</div></div>`;
+}
+function results(){
+  const r=ST.results,f=ST.f;
+  if(!r||!r.length)return`<div class="stitle" style="text-align:center">No matches found</div><button class="rstbtn" onclick="doReset()">← Try different parameters</button>`;
+  const t1=r.filter(x=>x.tier==="Tier 1").length,t2=r.filter(x=>x.tier==="Tier 2").length;
+  const sLbl=SECTORS.find(s=>s.v===f.sector)?.l||f.sector;
+  const gLbl=GEOS.find(g=>g.v===f.geo)?.l||f.geo;
+  const pLbl=PRODUCTS.find(p=>p.v===f.product)?.l||f.product;
+  const ltvN=parseInt(r[0]?.maxLtv)||65;
+
+  const cards=r.map((l,i)=>{
+    const isTop=i===0,ex=ST.expanded[l.id||l.rank],pct=l.matchPct,propW=Math.max(0,100-pct);
+    return`<div class="lc${isTop?" top":""}">
+      <div class="lhdr">
+        <div class="lrank ${isTop?"tr":"or"}">#${l.rank}</div>
+        <div class="lnw"><div class="lname">${l.name}</div><div class="ltype">${l.lenderType||l.type||""} · ${l.country||l.ctry||""}</div></div>
+        <div class="tbadge ${tierCls(l.tier)}">${l.tier}</div>
+      </div>
+      <div class="mbr"><span class="mbl">Match Score</span><span class="mbv">${pct}%</span></div>
+      <div class="mbwrap"><div class="mbfill" style="width:${pct}%"></div><div class="mbprop" style="left:${pct}%;width:${propW}%"></div></div>
+      <div class="propnote">+ Greenpeak intelligence layer (relationship · signals · execution)</div>
+      <div class="lstats">
+        <div><span class="sl">Margin </span><span class="sv">${l.marginRange||l.margin||"On request"}</span></div>
+        <div><span class="sl">Max LTV </span><span class="sv">${l.maxLtv||l.ltv+"%"||"–"}</span></div>
+        <div>${l.constructionRisk||l.cr?'<span class="ok">✓ Construction OK</span>':'<span class="na">Stabilised only</span>'}</div>
+        ${(l.esgFocus||l.esg)?'<span class="ok">✓ ESG</span>':""}
+      </div>
+      <button class="exbtn" onclick="toggleExpand(${l.id||l.rank})">${ex?"Hide detail ↑":"Show detail ↓"}</button>
+      ${ex?`<div class="ldesc">${l.summary||l.desc||""}</div>`:""}
+    </div>`;
+  }).join("");
+
+  const mailto=`mailto:${BOOKING_EMAIL}?subject=Lender Match — ${encodeURIComponent(f.proj||sLbl+' / '+gLbl)}&body=Hi Alain,%0A%0AI used the Lender Match tool and would like to discuss a mandate engagement.%0A%0AProject: ${encodeURIComponent(f.proj||sLbl)}%0ASector: ${f.sector}%0AGeography: ${f.geo}%0ATicket: €${f.ticket}M%0AProduct: ${f.product}`;
+
+  return`<div class="rhdr"><div style="font-size:26px;margin-bottom:7px">✅</div><div class="rtitle">Your Lender Shortlist</div><div class="rsub">${r.length} matches from ${(ST.totalScanned||1042).toLocaleString()} lenders · ${t1} Tier 1 · ${t2} Tier 2</div></div>
+  <div class="dpill"><strong>${sLbl}</strong><span class="dsep">·</span>${gLbl}<span class="dsep">·</span>€${f.ticket}M<span class="dsep">·</span>${pLbl}<span class="dsep">·</span>LTV ${f.ltv}%${f.cr?'<span class="dsep">·</span><span style="color:#b45309;font-weight:600">Construction risk</span>':""}${f.esg?'<span class="dsep">·</span><span style="color:#16a34a;font-weight:600">ESG</span>':""}</div>
+  ${cards}
+  <div class="pbox"><div class="pbt">Match scores shown are objective criteria only</div><div class="pbb">Sector, geography, ticket, structure, risk, and ESG fit — 74 points. The full Greenpeak mandate score adds our proprietary 26-point layer: relationship strength, live market signals, responsiveness history, and execution likelihood.</div></div>
+  <div class="ctabox"><div class="ctat">Want Greenpeak to run the process?</div><div class="ctab">We shortlist, approach, and manage the full lender campaign — including our proprietary relationship layer, NDA management, IOI comparison, and term sheet negotiation.</div><a class="ctabtn" href="${mailto}">Book a 30-min call →</a></div>
+  <button class="rstbtn" onclick="doReset()">← Start new search</button>`;
+}
+
+// ── RENDER ───────────────────────────────────────────────────────────────────
+function render(){
+  const c=document.getElementById("card");if(!c)return;
+  if(ST.step===1)c.innerHTML=step1();
+  else if(ST.step===2)c.innerHTML=step2();
+  else if(ST.step===3)c.innerHTML=step3();
+  else if(ST.step==="loading")c.innerHTML=loading();
+  else if(ST.step==="results")c.innerHTML=results();
+}
+
+// ── LIVE API CALL ────────────────────────────────────────────────────────────
+const STAGES_MSG=["Scanning lender database…","Applying sector filter…","Matching geography appetite…","Scoring ticket compatibility…","Evaluating structure fit…","Assessing risk appetite…","Ranking by match score…","Generating shortlist…"];
+
+async function doMatch(){
+  ST.errMsg="";ST.step="loading";render();
+  let i=0;
+  _progInt=setInterval(()=>{
+    i++;const pct=Math.min(82,i*12);
+    const pf=document.getElementById("pfill");if(pf)pf.style.width=pct+"%";
+    const pl=document.getElementById("plbl");if(pl)pl.textContent=STAGES_MSG[Math.min(i,STAGES_MSG.length-1)];
+    if(i>=7)clearInterval(_progInt);
+  },300);
+
+  try{
+    const res=await fetch(EDGE_FN_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":SUPABASE_KEY},
+      body:JSON.stringify({
+        sector:ST.f.sector,geography:ST.f.geo,stage:ST.f.stage,
+        product:ST.f.product,ticketMio:parseFloat(ST.f.ticket)||0,
+        ltv:parseFloat(ST.f.ltv)||65,constructionRisk:ST.f.cr,esgFocus:ST.f.esg,
+        projectName:ST.f.proj,contactName:ST.f.name,company:ST.f.company,
+        email:ST.f.email,description:ST.f.desc
+      })
+    });
+    const data=await res.json();
+    clearInterval(_progInt);
+    if(!res.ok||data.error)throw new Error(data.error||`Server error ${res.status}`);
+    ST.results=data.results||[];
+    ST.totalScanned=data.totalScanned||1042;
+    const pf=document.getElementById("pfill");if(pf)pf.style.width="100%";
+    setTimeout(()=>{ST.step="results";render();},350);
+  }catch(err){
+    clearInterval(_progInt);
+    ST.errMsg=err.message||"Something went wrong. Please try again.";
+    ST.step=3;render();
+  }
+}
+
+function doReset(){
+  ST={step:1,results:null,totalScanned:0,expanded:{},errMsg:"",
+    f:{proj:"",sector:"",geo:"",stage:"",product:"",ticket:"",ltv:"",cr:false,esg:false,name:"",company:"",email:"",desc:""}};
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
